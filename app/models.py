@@ -64,7 +64,7 @@ class Order(Base):
     notes = Column(String, nullable=True)
     date = Column(String, nullable=True)
     is_deleted = Column(Boolean, default=False)  # is_deleted 필드 추가
-    
+
     # 승인 관련 필드 추가
     approval_status = Column(String, nullable=True)  # 'approved' or 'rejected' or None
     approved_by = Column(String, nullable=True)
@@ -77,5 +77,5 @@ class Order(Base):
 
     def __repr__(self):
         return (
-            f"<Order(id={self.id}, date={self.date}, supplier_id={self.supplier_id})>"
+            f"<Order(id={self.id}, date='{self.date}', supplier_id={self.supplier_id})>"
         )
