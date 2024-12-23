@@ -24,8 +24,10 @@ app = FastAPI()
 
 # CORS 설정
 origins = [
-    "http://localhost:3000",
-    "http://localhost:8000",
+    # "http://localhost:3000",
+    # "http://localhost:8000",
+    "https://samsip.vercel.app",
+    "https://samsip-be.koyeb.app",
 ]
 
 app.add_middleware(
