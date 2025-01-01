@@ -58,8 +58,8 @@ class Order(Base):
     quantity = Column(Float)
     price = Column(Float)
     total = Column(Float)
-    payment_cycle = Column(String)
-    payment_method = Column(String, default="계좌이체")
+    payment_schedule = Column(String)  # 대금지급주기
+    purchase_cycle = Column(String, default="daily")  # 구입주기
     client = Column(String, nullable=True)  # 구입 연락처를 nullable로 변경
     notes = Column(String, nullable=True)
     date = Column(String, nullable=True)

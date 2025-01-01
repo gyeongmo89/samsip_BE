@@ -110,8 +110,8 @@ class OrderBase(BaseModel):
     quantity: float
     price: float
     total: float
-    payment_cycle: str
-    payment_method: str
+    payment_schedule: str  # 대금지급주기
+    purchase_cycle: str    # 구입주기
     client: str
     notes: Optional[str] = None
     date: Optional[str] = None
@@ -126,8 +126,8 @@ class OrderResponse(BaseModel):
     quantity: float
     price: float
     total: float
-    payment_cycle: str
-    payment_method: str
+    payment_schedule: str  # 대금지급주기
+    purchase_cycle: str    # 구입주기
     client: str
     notes: Optional[str] = None
     supplier: SupplierResponse
@@ -149,8 +149,8 @@ class OrderCreate(BaseModel):
     quantity: float
     price: float
     total: float
-    payment_cycle: str
-    payment_method: str
+    payment_schedule: str  # 대금지급주기
+    purchase_cycle: str    # 구입주기
     client: str
     notes: Optional[str] = None
     date: Optional[str] = None
@@ -386,8 +386,8 @@ def create_order(order: OrderBase, db: Session = Depends(get_db)):
             quantity=order.quantity,
             price=order.price,
             total=order.total,
-            payment_cycle=order.payment_cycle,
-            payment_method=order.payment_method,
+            payment_schedule=order.payment_schedule,
+            purchase_cycle=order.purchase_cycle,
             client=order.client,
             notes=order.notes,
             date=order.date,
@@ -434,9 +434,14 @@ def update_order(order_id: int, order: OrderCreate, db: Session = Depends(get_db
         db.flush()
 
     # 발주 데이터 업데이트
-    for key, value in order.dict().items():
-        if key not in ["supplier_name", "item_name", "unit_name"]:
-            setattr(db_order, key, value)
+    db_order.quantity = order.quantity
+    db_order.price = order.price
+    db_order.total = order.total
+    db_order.payment_schedule = order.payment_schedule  # 대금지급주기
+    db_order.purchase_cycle = order.purchase_cycle      # 구입주기
+    db_order.client = order.client
+    db_order.notes = order.notes
+    db_order.date = order.date
 
     db_order.supplier_id = supplier.id
     db_order.item_id = item.id
@@ -556,8 +561,8 @@ async def upload_orders(file: UploadFile = File(...), db: Session = Depends(get_
                 price=get_float_value(row[3]),
                 quantity=get_float_value(row[5]),
                 total=get_float_value(row[6]),
-                payment_cycle=str(row[7] or "미정"),
-                payment_method=str(row[8] or "미정"),
+                payment_schedule=str(row[7] or "미정"),
+                purchase_cycle=str(row[8] or "daily"),
                 client=str(row[9] or ""),
                 notes=str(row[10] or ""),
             )
